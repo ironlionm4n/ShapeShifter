@@ -8,9 +8,11 @@ namespace SLTut
     {
         [SerializeField] private LayerMask collisionMask;
 
+        private float _maxClimbAngle = 80;
         private const float skinWidth = .015f;
         public int horizontalRayCount = 4;
         public int verticalRayCount = 4;
+        public CollisionInfo collisionInfo;
 
         private float _horizontalRaySpacing;
         private float _verticalRaySpacing;
@@ -27,6 +29,7 @@ namespace SLTut
         public void Move(Vector3 velocity)
         {
             UpdateRaycastOrigins();
+            collisionInfo.Reset();
             if (velocity.x != 0) HorizontalCollisions(ref velocity);
             if (velocity.y != 0) VerticalCollisions(ref velocity);
 
@@ -48,9 +51,48 @@ namespace SLTut
 
                 if (hit)
                 {
-                    velocity.x = (hit.distance - skinWidth) * directionX;
-                    rayLength = hit.distance;
+                    var slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+                    if (i == 0 && slopeAngle <= _maxClimbAngle)
+                    {
+                        var distanceToSlopeStart = 0f;
+                        if (slopeAngle != collisionInfo.oldSlopeAngle)
+                        {
+                            distanceToSlopeStart = hit.distance - skinWidth;
+                            velocity.x -= distanceToSlopeStart * directionX;
+                        }
+                        ClimbSlope(ref velocity, slopeAngle);
+                        velocity.x += distanceToSlopeStart * directionX;
+                    }
+
+                    if (!collisionInfo.climbingSlope || slopeAngle > _maxClimbAngle)
+                    {
+                        velocity.x = (hit.distance - skinWidth) * directionX;
+                        rayLength = hit.distance;
+
+                        if (collisionInfo.climbingSlope)
+                        {
+                            velocity.y = Mathf.Tan(collisionInfo.slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(velocity.x);
+                        }
+
+                        collisionInfo.left = directionX == -1;
+                        collisionInfo.right = directionX == 1;
+                    }
+
                 }
+            }
+        }
+
+        private void ClimbSlope(ref Vector3 velocity, float slopeAngle)
+        {
+            var moveDistance = Mathf.Abs(velocity.x);
+            var climbVelocityY = Mathf.Sign(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+            if (velocity.y <= climbVelocityY)
+            {
+                velocity.y = climbVelocityY;
+                velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(velocity.x);
+                collisionInfo.below = true;
+                collisionInfo.climbingSlope = true;
+                collisionInfo.slopeAngle = slopeAngle;
             }
         }
 
@@ -71,6 +113,13 @@ namespace SLTut
                 {
                     velocity.y = (hit.distance - skinWidth) * directionY;
                     rayLength = hit.distance;
+
+                    if (collisionInfo.climbingSlope)
+                    {
+                        velocity.x = velocity.y / Mathf.Tan(collisionInfo.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign(velocity.x);
+                    }
+                    collisionInfo.below = directionY == -1;
+                    collisionInfo.above = directionY == 1;
                 }
             }
         }
@@ -102,6 +151,19 @@ namespace SLTut
         {
             public Vector2 topLeft, topRight;
             public Vector2 bottomLeft, bottomRight;
+        }
+
+        public struct CollisionInfo
+        {
+            public bool above, below, left, right, climbingSlope;
+            public float slopeAngle, oldSlopeAngle;
+            
+            public void Reset()
+            {
+                above = below = left = right = climbingSlope = false;
+                oldSlopeAngle = slopeAngle;
+                slopeAngle = 0;
+            }
         }
     }
 }
