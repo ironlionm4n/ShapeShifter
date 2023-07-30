@@ -12,10 +12,10 @@ public class GptPlayerController : MonoBehaviour
     [SerializeField] private PhysicsMaterial2D noFriction;
     [SerializeField] private PhysicsMaterial2D fullFriction;
     [SerializeField] private float maxSlopeAngle;
-    [SerializeField] private float wallAngle = 80f; // The angle beyond which an object is considered a wall
     [SerializeField] private float groundSmoothTime = 0.1f;
     [SerializeField] private float slopeSmoothTime = 0.001f;
     [SerializeField] private float jumpDirectionLerpValue = 0.5f;
+    [SerializeField] private RotateOnSlopeHelper rotateOnSlopeHelper;
 
     // Moving & Jumping Variables
     private CapsuleCollider2D _capsuleCollider2D;
@@ -37,6 +37,7 @@ public class GptPlayerController : MonoBehaviour
     private bool _canWalkOnSlope;
     private float _slopeDownAngleOld;
     private float _slopeSideAngle;
+    private float _spriteRotateAngle;
 
     private void OnEnable()
     {
@@ -82,6 +83,7 @@ public class GptPlayerController : MonoBehaviour
         CheckGrounded();
         SlopeCheck();
         ApplyMovement();
+        rotateOnSlopeHelper.RotateOnSlope(_facingDirection, -_spriteRotateAngle);
     }
 
     private void ApplyMovement()
@@ -122,12 +124,16 @@ public class GptPlayerController : MonoBehaviour
         {
             _canJump = false;
             _isJumping = true;
-
-            var jumpDirection = _isOnSlope
+            if (_isOnSlope)
+            {
+                _desiredVelocity.Set(0f, 0f);
+                _rigidbody.velocity = _desiredVelocity;    
+            }
+            /*var jumpDirection = _isOnSlope
                 ? Vector2.Lerp(_slopeNormalPerpendicular, Vector2.up, jumpDirectionLerpValue)
                 : Vector2.up;
-            Debug.Log("Jump Dir: " + jumpDirection);
-            _rigidbody.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
+            Debug.Log("Jump Dir: " + jumpDirection);*/
+            _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 
@@ -149,12 +155,14 @@ public class GptPlayerController : MonoBehaviour
         var slopeHitFront = Physics2D.Raycast(checkPosition, transform.right, slopeCheckDistance, groundLayerMask);
         var slopeHitBack = Physics2D.Raycast(checkPosition, -transform.right, slopeCheckDistance, groundLayerMask);
 
-        if (slopeHitFront && Vector2.Angle(slopeHitFront.normal, Vector2.up) < wallAngle)
+        Debug.Log($"Front: {slopeHitFront.normal}, Back: {slopeHitBack.normal}");
+        
+        if (slopeHitFront)
         {
             _isOnSlope = true;
             _slopeSideAngle = Vector2.Angle(slopeHitFront.normal, Vector2.up);
         }
-        else if (slopeHitBack && Vector2.Angle(slopeHitBack.normal, Vector2.up) < wallAngle)
+        else if (slopeHitBack)
         {
             _isOnSlope = true;
             _slopeSideAngle = Vector2.Angle(slopeHitBack.normal, Vector2.up);
@@ -172,24 +180,22 @@ public class GptPlayerController : MonoBehaviour
 
         if (hit)
         {
+            Debug.DrawRay(hit.point, hit.normal * 2f, Color.green);
             _slopeNormalPerpendicular = Vector2.Perpendicular(hit.normal).normalized;
             _slopeDownAngle = Vector2.Angle(hit.normal, Vector2.up);
+            _spriteRotateAngle = Vector2.SignedAngle(hit.normal, Vector2.up);
 
             if (_slopeDownAngle != _slopeDownAngleOld) _isOnSlope = true;
 
             _slopeDownAngleOld = _slopeDownAngle;
-
-            _canWalkOnSlope = _slopeDownAngle <= maxSlopeAngle;
-
-            if (_isOnSlope && _canWalkOnSlope && _xInput == 0f)
-                _rigidbody.sharedMaterial = fullFriction;
-            else if (_isOnSlope && _canWalkOnSlope && _xInput != 0f)
-                _rigidbody.sharedMaterial = noFriction;
-            else
-                _rigidbody.sharedMaterial = fullFriction;
         }
 
-        if (_isOnSlope && _canWalkOnSlope && _xInput == 0f)
+        if ((_slopeDownAngle > maxSlopeAngle || _slopeSideAngle > maxSlopeAngle) && _slopeDownAngle != 0)
+            _canWalkOnSlope = false;
+        else
+            _canWalkOnSlope = true;
+
+        if (_isOnSlope && _canWalkOnSlope && _xInput == 0f && (_slopeDownAngle != 0 && _slopeSideAngle != 90))
             _rigidbody.sharedMaterial = fullFriction;
         else
             _rigidbody.sharedMaterial = noFriction;
