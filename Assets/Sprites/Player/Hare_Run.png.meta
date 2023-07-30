@@ -161,9 +161,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 500
-        y: 500
+        y: 517
         width: 500
-        height: 500
+        height: 483
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,10 +181,10 @@ TextureImporter:
       name: Hare_Run_2
       rect:
         serializedVersion: 2
-        x: 1000
-        y: 500
+        x: 1001
+        y: 511
         width: 500
-        height: 500
+        height: 489
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,9 +203,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1500
-        y: 500
+        y: 514
         width: 500
-        height: 500
+        height: 486
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -245,9 +245,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 5
         width: 500
-        height: 500
+        height: 495
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -266,9 +266,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 500
-        y: 0
+        y: 6
         width: 500
-        height: 500
+        height: 494
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -287,9 +287,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1000
-        y: 0
+        y: 6
         width: 500
-        height: 500
+        height: 494
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -308,9 +308,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1500
-        y: 0
+        y: 15
         width: 500
-        height: 500
+        height: 485
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
