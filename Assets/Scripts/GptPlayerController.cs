@@ -155,7 +155,7 @@ public class GptPlayerController : MonoBehaviour
         var slopeHitFront = Physics2D.Raycast(checkPosition, transform.right, slopeCheckDistance, groundLayerMask);
         var slopeHitBack = Physics2D.Raycast(checkPosition, -transform.right, slopeCheckDistance, groundLayerMask);
 
-        Debug.Log($"Front: {slopeHitFront.normal}, Back: {slopeHitBack.normal}");
+        //Debug.Log($"Front: {slopeHitFront.normal}, Back: {slopeHitBack.normal}");
         
         if (slopeHitFront)
         {
