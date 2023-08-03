@@ -9,7 +9,7 @@ public class WolfShiftAction : IAction
 {
     private GameObject player;
 
-    private const string animalType = "Wolf";
+    private const AnimalType animalType = AnimalType.Wolf;
 
     //Going to need a reference to the wolf movement or other controllers
 
@@ -36,7 +36,7 @@ public class WolfShiftAction : IAction
     /// Returns the animal type of the action
     /// </summary>
     /// <returns></returns>
-    public string GetAnimalType()
+    public AnimalType GetAnimalType()
     {
         return animalType;
     }

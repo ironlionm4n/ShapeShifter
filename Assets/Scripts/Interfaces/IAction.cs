@@ -4,5 +4,5 @@ public interface IAction
 
     public void Undo();
 
-    public string GetAnimalType();
+    public AnimalType GetAnimalType();
 }

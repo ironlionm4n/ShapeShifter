@@ -12,7 +12,7 @@ public class ShiftManager : MonoBehaviour
         invoker = InvokerHolder.Instance.ShiftInvoker;
 
         IAction startingAction = new RabbitShiftAction(transform.parent.gameObject);
-        invoker.AddAction(startingAction);
+        invoker.AddAction(startingAction, true);
     }
 
     // Update is called once per frame
@@ -21,19 +21,19 @@ public class ShiftManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             IAction newAction = new RabbitShiftAction(transform.parent.gameObject);
-            invoker.AddAction(newAction);
+            invoker.AddAction(newAction, false);
         }
 
         if (Input.GetKeyDown(KeyCode.T))
         {
             IAction newAction = new RavenShiftAction(transform.parent.gameObject);
-            invoker.AddAction(newAction);
+            invoker.AddAction(newAction, false);
         }
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
             IAction newAction = new WolfShiftAction(transform.parent.gameObject);
-            invoker.AddAction(newAction);
+            invoker.AddAction(newAction, false);
         }
     }
 }

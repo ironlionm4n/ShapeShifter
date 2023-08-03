@@ -6,7 +6,7 @@ public class RavenShiftAction : IAction
 {
     private GameObject player;
 
-    private const string animalType = "Raven";
+    private const AnimalType animalType = AnimalType.Raven;
 
     //Going to need a reference to the raven movement or other controllers
 
@@ -34,7 +34,7 @@ public class RavenShiftAction : IAction
     /// Returns the animal type of the action
     /// </summary>
     /// <returns></returns>
-    public string GetAnimalType()
+    public AnimalType GetAnimalType()
     {
         return animalType;
     }
