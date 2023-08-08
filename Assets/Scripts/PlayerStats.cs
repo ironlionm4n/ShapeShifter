@@ -76,4 +76,13 @@ public class PlayerStats : MonoBehaviour
     {
         currentAnimal = newAnimalType;
     }
+
+    /// <summary>
+    /// Returns the current animal the player is transformed into
+    /// </summary>
+    /// <returns></returns>
+    public AnimalType GetCurrentAnimalType()
+    {
+        return currentAnimal;
+    }
 }

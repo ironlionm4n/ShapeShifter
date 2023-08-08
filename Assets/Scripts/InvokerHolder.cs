@@ -8,6 +8,7 @@ public class InvokerHolder : MonoBehaviour
 
     public ShiftInvoker ShiftInvoker;
     public PlayerStatInvoker PlayerStatInvoker;
+    public UIInvoker UIInvoker;
 
     private void OnEnable()
     {
@@ -23,6 +24,7 @@ public class InvokerHolder : MonoBehaviour
 
         ShiftInvoker = new ShiftInvoker();
         PlayerStatInvoker = new PlayerStatInvoker();
+        UIInvoker = new UIInvoker();
     }
 
 }
