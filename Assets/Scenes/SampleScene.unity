@@ -387,7 +387,6 @@ GameObject:
   - component: {fileID: 291521421}
   - component: {fileID: 291521420}
   - component: {fileID: 291521419}
-  - component: {fileID: 291521422}
   - component: {fileID: 291521423}
   m_Layer: 6
   m_Name: Rabbit
@@ -487,7 +486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -511,19 +510,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 291521417}
   m_CullTransparentMesh: 1
---- !u!114 &291521422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 291521417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 501d0050fc8ec1443b30f5038a5c0f6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 1685398979}
 --- !u!61 &291521423
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1235,7 +1221,6 @@ GameObject:
   - component: {fileID: 801141842}
   - component: {fileID: 801141841}
   - component: {fileID: 801141840}
-  - component: {fileID: 801141843}
   - component: {fileID: 801141844}
   m_Layer: 6
   m_Name: Raven
@@ -1335,7 +1320,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1359,19 +1344,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801141838}
   m_CullTransparentMesh: 1
---- !u!114 &801141843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801141838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 501d0050fc8ec1443b30f5038a5c0f6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 1685398979}
 --- !u!61 &801141844
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5731,7 +5703,6 @@ GameObject:
   - component: {fileID: 1802259773}
   - component: {fileID: 1802259772}
   - component: {fileID: 1802259771}
-  - component: {fileID: 1802259774}
   - component: {fileID: 1802259775}
   m_Layer: 6
   m_Name: Wolf
@@ -5831,7 +5802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5855,19 +5826,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1802259769}
   m_CullTransparentMesh: 1
---- !u!114 &1802259774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802259769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 501d0050fc8ec1443b30f5038a5c0f6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 1685398979}
 --- !u!61 &1802259775
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5960,7 +5918,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1945828116}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 

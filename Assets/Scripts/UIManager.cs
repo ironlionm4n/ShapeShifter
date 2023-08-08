@@ -109,6 +109,7 @@ public class UIManager : MonoBehaviour
                 {
                     _selectedButton.onClick.Invoke();
                     _selectedButton.interactable = false;
+
                     _lastSelectedButton.interactable = true;
                     _lastSelectedButton = _selectedButton;
 
