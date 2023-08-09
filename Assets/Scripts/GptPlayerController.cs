@@ -14,7 +14,6 @@ public class GptPlayerController : MonoBehaviour
     [SerializeField] private float maxSlopeAngle;
     [SerializeField] private float groundSmoothTime = 0.1f;
     [SerializeField] private float slopeSmoothTime = 0.001f;
-    [SerializeField] private float jumpDirectionLerpValue = 0.5f;
     [SerializeField] private RotateOnSlopeHelper rotateOnSlopeHelper;
 
     // Moving & Jumping Variables
@@ -29,6 +28,7 @@ public class GptPlayerController : MonoBehaviour
     private bool _isJumping;
     private bool _canJump = true;
     private int _facingDirection = 1;
+    private Animator _animator;
 
     // Slope Variables
     private float _slopeDownAngle;
@@ -38,6 +38,7 @@ public class GptPlayerController : MonoBehaviour
     private float _slopeDownAngleOld;
     private float _slopeSideAngle;
     private float _spriteRotateAngle;
+    private static readonly int IsRunning = Animator.StringToHash("isRunning");
 
     private void OnEnable()
     {
@@ -52,6 +53,7 @@ public class GptPlayerController : MonoBehaviour
         _capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         _colliderSize = _capsuleCollider2D.size;
         _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -67,6 +69,14 @@ public class GptPlayerController : MonoBehaviour
     private void CheckHorizontalInput()
     {
         _xInput = _horizontal.ReadValue<Vector2>().x;
+        if (Mathf.Abs(_xInput) > 0)
+        {
+            _animator.SetBool(IsRunning, true);
+        }
+        else
+        {
+            _animator.SetBool(IsRunning, false);
+        }
         if (_xInput == 1 && _facingDirection == -1)
             Flip();
         else if (_xInput == -1 && _facingDirection == 1) Flip();
@@ -83,7 +93,8 @@ public class GptPlayerController : MonoBehaviour
         CheckGrounded();
         SlopeCheck();
         ApplyMovement();
-        rotateOnSlopeHelper.RotateOnSlope(_facingDirection, -_spriteRotateAngle);
+        if(rotateOnSlopeHelper)
+            rotateOnSlopeHelper.RotateOnSlope(_facingDirection, -_spriteRotateAngle);
     }
 
     private void ApplyMovement()
@@ -120,6 +131,8 @@ public class GptPlayerController : MonoBehaviour
 
     private void HandleJump(InputAction.CallbackContext obj)
     {
+        // Double Jump
+        // Float to apex and increase fall speed
         if (_canJump)
         {
             _canJump = false;
@@ -153,7 +166,9 @@ public class GptPlayerController : MonoBehaviour
     private void HorizontalSlopeCheck(Vector2 checkPosition)
     {
         var slopeHitFront = Physics2D.Raycast(checkPosition, transform.right, slopeCheckDistance, groundLayerMask);
+        Debug.DrawRay(checkPosition, transform.right * slopeCheckDistance, Color.red);
         var slopeHitBack = Physics2D.Raycast(checkPosition, -transform.right, slopeCheckDistance, groundLayerMask);
+        Debug.DrawRay(checkPosition, -transform.right * slopeCheckDistance, Color.red);
 
         //Debug.Log($"Front: {slopeHitFront.normal}, Back: {slopeHitBack.normal}");
         
