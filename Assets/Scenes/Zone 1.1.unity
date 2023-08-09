@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 119435717}
   - component: {fileID: 119435716}
   - component: {fileID: 119435715}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spirit Gradian Tree 1.1 copy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,8 @@ EdgeCollider2D:
   - {x: -53.76183, y: -12.063692}
   - {x: -46.3679, y: -8.397992}
   - {x: -35.63676, y: -4.5810533}
-  - {x: -20.06229, y: -8.608755}
+  - {x: -28.845278, y: -5.497782}
+  - {x: -18.235178, y: -9.293921}
   - {x: -7.303876, y: -8.665072}
   - {x: -0.50414765, y: -11.318447}
   - {x: 9.822169, y: -11.147926}
@@ -239,7 +240,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: ae497bec5f8a2f843b996552cf6deb46, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
