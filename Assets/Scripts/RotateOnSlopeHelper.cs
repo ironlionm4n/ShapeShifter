@@ -13,14 +13,17 @@ public class RotateOnSlopeHelper : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void RotateOnSlope(int direction, float angle)
+    public void RotateOnSlope(Quaternion rotation, int direction, float angle)
     {
-        transform.rotation = Quaternion.Euler(0,0, angle);
+        transform.rotation = Quaternion.Euler(rotation.x,rotation.y, angle);
 
-        if (_previousDirection != direction)
+        if (_spriteRenderer != null)
         {
-            _spriteRenderer.flipX = direction == -1;
-            _previousDirection = direction;
+            if (_previousDirection != direction)
+            {
+                _spriteRenderer.flipX = direction == -1;
+                _previousDirection = direction;
+            }
         }
     }
     

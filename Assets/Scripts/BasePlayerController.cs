@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-public class GptPlayerController : MonoBehaviour
+public class BasePlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
@@ -15,20 +16,21 @@ public class GptPlayerController : MonoBehaviour
     [SerializeField] private float groundSmoothTime = 0.1f;
     [SerializeField] private float slopeSmoothTime = 0.001f;
     [SerializeField] private RotateOnSlopeHelper rotateOnSlopeHelper;
+    [SerializeField] private Transform slopeCheckTransform;
+    [SerializeField] private FacingDirection _facingDirection = FacingDirection.Right;
+    [SerializeField] private GameObject hareRig;
+    [SerializeField] private Animator animator;
+
 
     // Moving & Jumping Variables
-    private CapsuleCollider2D _capsuleCollider2D;
+    private Vector3 _checkPosition;
     private HareControls _hareActionMap;
     private InputAction _horizontal;
     private Rigidbody2D _rigidbody;
     private Vector2 _desiredVelocity;
     private float _xInput;
-    private Vector2 _colliderSize;
     private bool _isGrounded;
     private bool _isJumping;
-    private bool _canJump = true;
-    private int _facingDirection = 1;
-    private Animator _animator;
 
     // Slope Variables
     private float _slopeDownAngle;
@@ -39,53 +41,65 @@ public class GptPlayerController : MonoBehaviour
     private float _slopeSideAngle;
     private float _spriteRotateAngle;
     private static readonly int IsRunning = Animator.StringToHash("isRunning");
+    private bool _hasDoubleJumped;
+    [SerializeField] private float fallingGravityModifier = 4f;
+    [SerializeField] private float jumpingGravityModifier = 2f;
+    private int _jumpCount = 0;
 
     private void OnEnable()
     {
         _hareActionMap = new HareControls();
         _hareActionMap.Enable();
         _horizontal = _hareActionMap.HareMovement.Movement;
-        _hareActionMap.HareMovement.Jump.performed += HandleJump;
     }
 
     private void Start()
     {
-        _capsuleCollider2D = GetComponent<CapsuleCollider2D>();
-        _colliderSize = _capsuleCollider2D.size;
+        _checkPosition = slopeCheckTransform.position;
         _rigidbody = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        Debug.Log("jump count: "+_jumpCount);
         CheckHorizontalInput();
-    }
-
-    private void OnDisable()
-    {
-        _hareActionMap.HareMovement.Jump.performed -= HandleJump;
+        // Custom gravity: Increase fall speed after reaching the apex of the jump
+        if (_rigidbody.velocity.y < 0)
+        {
+            _rigidbody.velocity += Vector2.up * (Physics2D.gravity.y * (fallingGravityModifier * Time.deltaTime));
+        }
+        else
+        {
+            _rigidbody.velocity += Vector2.up * (Physics2D.gravity.y * (jumpingGravityModifier * Time.deltaTime));
+        }
+        if (_hareActionMap.HareMovement.Jump.WasPerformedThisFrame() && _jumpCount < 1)
+        {
+            HandleJump();
+        }
     }
 
     private void CheckHorizontalInput()
     {
         _xInput = _horizontal.ReadValue<Vector2>().x;
         if (Mathf.Abs(_xInput) > 0)
-        {
-            _animator.SetBool(IsRunning, true);
-        }
+            animator.SetBool(IsRunning, true);
         else
-        {
-            _animator.SetBool(IsRunning, false);
-        }
-        if (_xInput == 1 && _facingDirection == -1)
-            Flip();
-        else if (_xInput == -1 && _facingDirection == 1) Flip();
+            animator.SetBool(IsRunning, false);
+        if (_xInput < 0 && _facingDirection != FacingDirection.Left)
+            FlipLeft();
+        else if (_xInput > 0 && _facingDirection != FacingDirection.Right) FlipRight();
     }
 
-    private void Flip()
+    private void FlipLeft()
     {
-        _facingDirection *= -1;
-        transform.Rotate(0.0f, 180.0f, 0.0f);
+        _facingDirection = FacingDirection.Left;
+        transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    private void FlipRight()
+    {
+        _facingDirection = FacingDirection.Right;
+        transform.localScale = new Vector3(1, 1, 1);
     }
 
     private void FixedUpdate()
@@ -93,8 +107,6 @@ public class GptPlayerController : MonoBehaviour
         CheckGrounded();
         SlopeCheck();
         ApplyMovement();
-        if(rotateOnSlopeHelper)
-            rotateOnSlopeHelper.RotateOnSlope(_facingDirection, -_spriteRotateAngle);
     }
 
     private void ApplyMovement()
@@ -124,30 +136,46 @@ public class GptPlayerController : MonoBehaviour
     {
         _isGrounded = Physics2D.OverlapCircle(groundCheckTransform.position, groundCheckRadius, groundLayerMask);
 
-        if (_rigidbody.velocity.y <= 0.0f) _isJumping = false;
+        //if (_rigidbody.velocity.y <= 0.0f) _isJumping = false;
 
-        if (_isGrounded && !_isJumping && _slopeDownAngle <= maxSlopeAngle) _canJump = true;
+        if (_isGrounded && _slopeDownAngle <= maxSlopeAngle)
+        {
+            _isJumping = false;
+            _jumpCount = 0;
+            _hasDoubleJumped = false;
+        }
     }
 
-    private void HandleJump(InputAction.CallbackContext obj)
+    private void HandleJump()
     {
+        // If the player is on the ground or hasn't double jumped yet
+        if (!_isJumping || !_hasDoubleJumped)
+        {
+            _jumpCount++;
+            // Reset vertical velocity for consistent jump height
+            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, 0f);
+
+            // Apply jump force
+            _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+            // If the player is already in the air (i.e., this is a double jump)
+            if (_isJumping)
+            {
+                _hasDoubleJumped = true;
+            }
+
+            _isJumping = true;
+        }
         // Double Jump
         // Float to apex and increase fall speed
-        if (_canJump)
+        /*_isJumping = true;
+        if (_isOnSlope)
         {
-            _canJump = false;
-            _isJumping = true;
-            if (_isOnSlope)
-            {
-                _desiredVelocity.Set(0f, 0f);
-                _rigidbody.velocity = _desiredVelocity;    
-            }
-            /*var jumpDirection = _isOnSlope
-                ? Vector2.Lerp(_slopeNormalPerpendicular, Vector2.up, jumpDirectionLerpValue)
-                : Vector2.up;
-            Debug.Log("Jump Dir: " + jumpDirection);*/
-            _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _desiredVelocity.Set(0f, 0f);
+            _rigidbody.velocity = _desiredVelocity;
         }
+        
+        _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);*/
     }
 
     private void OnDrawGizmos()
@@ -158,9 +186,10 @@ public class GptPlayerController : MonoBehaviour
 
     private void SlopeCheck()
     {
-        var checkPosition = transform.position - new Vector3(0f, _colliderSize.y / 2);
-        HorizontalSlopeCheck(checkPosition);
-        VerticalSlopeCheck(checkPosition);
+        _checkPosition = slopeCheckTransform.position;
+        // var checkPosition = transform.position - new Vector3(0f, _colliderSize.y / 2);
+        HorizontalSlopeCheck(_checkPosition);
+        VerticalSlopeCheck(_checkPosition);
     }
 
     private void HorizontalSlopeCheck(Vector2 checkPosition)
@@ -171,7 +200,7 @@ public class GptPlayerController : MonoBehaviour
         Debug.DrawRay(checkPosition, -transform.right * slopeCheckDistance, Color.red);
 
         //Debug.Log($"Front: {slopeHitFront.normal}, Back: {slopeHitBack.normal}");
-        
+
         if (slopeHitFront)
         {
             _isOnSlope = true;
@@ -199,6 +228,7 @@ public class GptPlayerController : MonoBehaviour
             _slopeNormalPerpendicular = Vector2.Perpendicular(hit.normal).normalized;
             _slopeDownAngle = Vector2.Angle(hit.normal, Vector2.up);
             _spriteRotateAngle = Vector2.SignedAngle(hit.normal, Vector2.up);
+//            Debug.Log(_spriteRotateAngle);
 
             if (_slopeDownAngle != _slopeDownAngleOld) _isOnSlope = true;
 
@@ -210,9 +240,15 @@ public class GptPlayerController : MonoBehaviour
         else
             _canWalkOnSlope = true;
 
-        if (_isOnSlope && _canWalkOnSlope && _xInput == 0f && (_slopeDownAngle != 0 && _slopeSideAngle != 90))
+        if (_isOnSlope && _canWalkOnSlope && _xInput == 0f && _slopeDownAngle != 0 && _slopeSideAngle != 90)
             _rigidbody.sharedMaterial = fullFriction;
         else
             _rigidbody.sharedMaterial = noFriction;
     }
+}
+
+internal enum FacingDirection
+{
+    Left,
+    Right
 }
