@@ -248,7 +248,7 @@ public partial class @HareControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
+                    ""name"": ""positive"",
                     ""id"": ""66aaf17b-d5be-4069-908d-8eeb55495bcc"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
@@ -259,7 +259,7 @@ public partial class @HareControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
+                    ""name"": ""negative"",
                     ""id"": ""a2355783-e8ef-40ad-b062-0c748637e22c"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
@@ -281,7 +281,7 @@ public partial class @HareControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
+                    ""name"": ""positive"",
                     ""id"": ""fc101e84-d893-4f97-b210-0caf432ffd39"",
                     ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
@@ -292,7 +292,7 @@ public partial class @HareControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
+                    ""name"": ""negative"",
                     ""id"": ""fbd47209-bc1d-4540-b1ea-9edd7eb972e1"",
                     ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",

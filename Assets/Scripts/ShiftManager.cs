@@ -11,7 +11,7 @@ public class ShiftManager : MonoBehaviour
     {
         invoker = InvokerHolder.Instance.ShiftInvoker;
 
-        IAction startingAction = new RabbitShiftAction(transform.parent.gameObject);
+        IAction startingAction = new HareShiftAction(transform.parent.gameObject);
         invoker.AddAction(startingAction, true);
     }
 
@@ -20,7 +20,7 @@ public class ShiftManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.R))
         {
-            IAction newAction = new RabbitShiftAction(transform.parent.gameObject);
+            IAction newAction = new HareShiftAction(transform.parent.gameObject);
             invoker.AddAction(newAction, false);
         }
 

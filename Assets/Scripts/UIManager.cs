@@ -177,9 +177,9 @@ public class UIManager : MonoBehaviour
         _shiftInvoker.AddAction(newAction, false);
     }
 
-    public void ShiftToRabbit()
+    public void ShiftToHare()
     {
-        IAction newAction = new RabbitShiftAction(GameObject.Find("Player"));
+        IAction newAction = new HareShiftAction(GameObject.Find("Player"));
         _shiftInvoker.AddAction(newAction, false);
     }
 }

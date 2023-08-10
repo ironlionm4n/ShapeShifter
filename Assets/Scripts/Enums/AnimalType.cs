@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum AnimalType 
 {
-    Rabbit,
+    Hare,
     Wolf,
     Raven,
     None
