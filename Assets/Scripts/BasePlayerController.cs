@@ -61,7 +61,6 @@ public class BasePlayerController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("jump count: "+_jumpCount);
         CheckHorizontalInput();
         // Custom gravity: Increase fall speed after reaching the apex of the jump
         if (_rigidbody.velocity.y < 0)
